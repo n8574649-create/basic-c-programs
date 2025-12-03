@@ -1,0 +1,202 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct Book {
+    int id;
+    char title[50];
+    char author[50];
+    int quantity;
+    struct Book *next;
+}book;
+book *head = NULL;
+
+book* create_Book(int id, char title[], char author[], int quantity)
+{
+    book *newBook = (book*)malloc(sizeof(book));
+    newBook->id = id;
+    strcpy(newBook->title, title);
+    strcpy(newBook->author, author);
+    newBook->quantity = quantity;
+    newBook->next = NULL;
+    return newBook;
+}
+
+void add_Book()
+{
+    int id, quantity;
+    char title[50], author[50];
+    printf("\nEnter Book ID: ");
+    scanf("%d", &id);
+    printf("Enter Title/Name of the book:\n ");
+    scanf(" %s", title);
+    printf("Enter Author name: \n");
+    scanf(" %s", author);
+    printf("Enter Quantity(number of book present): \n");
+    scanf("%d", &quantity);
+    book *newBook = create_Book(id, title, author, quantity);
+    if (head == NULL)
+    {
+        head = newBook;
+    }
+    else
+    {
+        book *temp = head;
+        while (temp->next != NULL)
+        {
+            temp = temp->next;
+        }
+        temp->next = newBook;
+    }
+    printf("\nBook is added successfully\n");
+}
+
+void display_Books()
+{
+        if (head == NULL)
+        {
+            printf("\n there is no books available.\n");
+            return;
+        }
+        book *temp = head;
+        printf("\nLibrary Books n");
+
+    while (temp != NULL)
+    {
+        printf("\n new book information:\n");
+        printf("\nID: %d", temp->id);
+        printf("\nTitle: %s", temp->title);
+        printf("\nAuthor: %s", temp->author);
+        printf("\nQuantity: %d\n", temp->quantity);
+        temp = temp->next;
+    }
+}
+
+void search_Book()
+{
+    int id;
+    printf("\nEnter Book ID to search: ");
+    scanf("%d", &id);
+    book *temp = head;
+    while (temp != NULL)
+    {
+        if (temp->id == id)
+        {
+            printf("\nBook is Found");
+            printf("\nTitle: %s", temp->title);
+            printf("\nAuthor: %s", temp->author);
+            printf("\nQuantity: %d\n", temp->quantity);
+            return;
+        }
+        temp = temp->next;
+    }
+
+    printf("\nBook is not found\n");
+}
+
+void issue_Book()
+{
+    int id;
+    printf("\nEnter Book ID to be issued: ");
+    scanf("%d", &id);
+    book *temp = head;
+    while (temp != NULL)
+    {
+        if (temp->id == id)
+        {
+            if (temp->quantity > 0)
+            {
+                temp->quantity--;
+                printf("\nBook is issued successfully\n");
+            }
+            else
+            {
+                printf("\nBook is out of stock\n");
+            }
+            return;
+        }
+        temp = temp->next;
+    }
+    printf("\nBook is not found!\n");
+}
+
+void return_Book()
+{
+    int id;
+    printf("\nEnter Book ID to return: ");
+    scanf("%d", &id);
+    book *temp = head;
+    while (temp != NULL)
+    {
+        if (temp->id == id)
+        {
+            temp->quantity++;
+            printf("\nBook is returned successfully\n");
+            return;
+        }
+        temp = temp->next;
+    }
+
+    printf("\nBook is not found\n");
+}
+
+void delete_Book()
+{
+    int id;
+    printf("\nEnter Book ID to be delete: ");
+    scanf("%d", &id);
+    book *temp = head;
+    book *prev = NULL;
+    if (temp != NULL && temp->id == id)
+    {
+        head = temp->next;
+        free(temp);
+        printf("\nBook is deleted successfully!\n");
+        return;
+    }
+    while (temp != NULL && temp->id != id)
+    {
+        prev = temp;
+        temp = temp->next;
+    }
+    if (temp == NULL)
+    {
+        printf("\nBook is not found!\n");
+        return;
+    }
+    prev->next = temp->next;
+    free(temp);
+    printf("\nBook is  deleted successfully!\n");
+}
+int main()
+{
+        int ch;
+        printf("\nLibrary Management System\n");
+        printf("\n1. Add Book \n2. Display Books \n3. Search Book \n4. Issue Book \n5. Return Book \n6. Delete Book \n7. Exit");
+        while (1)
+        {
+            printf("\n\nEnter your choice: ");
+            scanf("%d", &ch);
+            switch(ch)
+            {
+                case 1: add_Book();
+                        break;
+                case 2: display_Books();
+                        break;
+                case 3: search_Book();
+                        break;
+                case 4: issue_Book();
+                        break;
+                case 5: return_Book();
+                        break;
+                case 6: delete_Book();
+                        break;
+                case 7: exit(0);
+                        break;
+                default:
+                     printf("\nInvalid choice!\n");
+            }
+        }
+        return 0;
+}
+
